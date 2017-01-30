@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8" />
+	<script src="Scripts/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+	<input type="text" id="searchID"/>
+	<button onclick="searchContact()">Search</button>
+	<button onclick="addContact()">Add Contact</button>
+	<button onclick="updateContact()">Update Contact</button>
+	<button onclick="deleteContact()">Delete Contact</button>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$.getJSON("api/Contacts", function (result) {
+				console.info(result);
+			});
+		});
+
+		function searchContact() {
+			$.ajax({
+				type: "GET",
+				dataType: "json",
+				url: "api/Contacts/" + $("#searchID").val(),
+				success: function (result) {
+					console.info(result);
+				}
+			});
+		}
+
+		function addContact() {
+			var newContact = {
+				"Id": 0,
+				"FirstName": "Tony",
+				"LastName" : "Stark"
+			};
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				url: "api/Contacts/" + $("#searchID").val(),
+				data:newContact,
+				success: function (result) {
+					console.info(result);
+				}
+			});
+		}
+
+		function updateContact() {
+			var changeContact = {
+				"FirstName": "Spidy"
+			}
+			$.ajax({
+				type: "PUT",
+				dataType: "json",
+				url: "api/Contacts/0",
+				data: changeContact,
+				success: function (result) {
+					console.info(result);
+				}
+			});
+		}
+
+		function deleteContact() {
+		   
+		    $.ajax({
+		        type: "DELETE",
+		        dataType: "json",
+		        url: "api/Contacts/0",
+		        success: function (result) {
+		            console.info(result);
+		        }
+		    });
+		}
+	</script>
+</body>
+</html>

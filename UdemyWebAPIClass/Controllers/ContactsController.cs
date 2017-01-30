@@ -13,9 +13,9 @@ namespace UdemyWebAPIClass.Controllers
         Contacts[] contacts = new Contacts[]
         {
             new Contacts() {Id=0,FirstName="Peter",LastName="Smith" },
-            new Contacts() {Id=0,FirstName="Bruce",LastName="Parker" },
-            new Contacts() {Id=0,FirstName="Wayne",LastName="Jones" },
-            new Contacts() {Id=0,FirstName="Jake",LastName="Banner" },
+            new Contacts() {Id=1,FirstName="Bruce",LastName="Parker" },
+            new Contacts() {Id=2,FirstName="Wayne",LastName="Jones" },
+            new Contacts() {Id=3,FirstName="Jake",LastName="Banner" },
         };
         // GET: api/Contacts
         public IEnumerable<Contacts> Get()
@@ -24,24 +24,45 @@ namespace UdemyWebAPIClass.Controllers
         }
 
         // GET: api/Contacts/5
-        public string Get(int id)
+        public IHttpActionResult Get(int id)
         {
-            return "value";
+            Contacts contact = contacts.FirstOrDefault<Contacts>(c => c.Id == id);
+
+            if (contact == null)
+                return NotFound();
+
+            return Ok(contact);
         }
 
         // POST: api/Contacts
-        public void Post([FromBody]string value)
+        public IEnumerable<Contacts> Post([FromBody]Contacts newContact)
         {
+            List<Contacts> contactList = contacts.ToList<Contacts>();
+            newContact.Id = contactList.Count;
+            contactList.Add(newContact);
+            contacts = contactList.ToArray();
+
+            return contacts;
         }
 
         // PUT: api/Contacts/5
-        public void Put(int id, [FromBody]string value)
+        public IEnumerable<Contacts> Put(int id, [FromBody]Contacts updateContact)
         {
+            Contacts contact = contacts.FirstOrDefault<Contacts>(c => c.Id == id);
+            if(contact != null)
+            {
+                contact.FirstName = updateContact.FirstName;
+                contact.LastName = updateContact.LastName;
+            }
+
+            return contacts;
         }
 
         // DELETE: api/Contacts/5
-        public void Delete(int id)
+        public IEnumerable<Contacts> Delete(int id)
         {
+            contacts = contacts.Where<Contacts>(c => c.Id != id).ToArray<Contacts>();
+            return contacts;
         }
     }
 }
